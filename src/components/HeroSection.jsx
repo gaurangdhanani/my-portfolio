@@ -12,7 +12,7 @@ const HeroSection = () => {
       <div className="flex flex-col md:flex-row items-center justify-between px-[4vw] gap-10">
         {/* Left Side - Text */}
         <div className="flex-1">
-        <h1 className="text-[8vw] max-md:text-[12vw] leading-[0.9em] font-semibold font-neuemontreal flex flex-wrap gap-2">
+        <h1 className="text-[8vw] max-md:text-[12vw] leading-[0.9em] font-semibold font-oswald flex flex-wrap gap-2">
         <motion.span
             className="inline-block"
             initial={{ opacity: 0, y: 20 }}
@@ -35,7 +35,7 @@ const HeroSection = () => {
         </h1>
 
 
-        <div className="mt-[2vw] max-md:mt-[4vw] space-y-[1vw] max-md:space-y-[4vw] max-w-[40vw] max-md:max-w-full text-[#0f0f0f] font-semibold font-neuemontreal leading-snug px-2">
+        <div className="mt-[2vw] max-md:mt-[4vw] space-y-[1vw] max-md:space-y-[4vw] max-w-[40vw] max-md:max-w-full text-[#0f0f0f] font-semibold font-oswald leading-snug px-2">
             <motion.h2
                 className="text-[1vw] max-md:text-[4.5vw]"
                 initial={{ opacity: 0, x: -50 }}
@@ -51,7 +51,7 @@ const HeroSection = () => {
 
             <motion.a
                 href="#contact"
-                className="inline-block mt-[2vw] max-md:mt-[5vw] bg-blue-200 text-[#0f0f0f] px-6 py-3 rounded-lg hover:bg-blue-600 hover:text-white transition font-neuemontreal text-[1vw] max-md:text-[4vw]"
+                className="inline-block mt-[2vw] max-md:mt-[5vw] bg-[#0f0f0f] text-white px-6 py-3 rounded-lg hover:bg-blue-600 hover:text-white transition font-oswald text-[1vw] max-md:text-[4vw]"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 transition={{ duration: 2, delay: 0.4, ease: 'easeOut' }}

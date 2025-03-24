@@ -21,7 +21,7 @@ function App() {
                 <HeroSection />
                 <Divider />
                 <Contact />
-                <footer className="w-full bg-blue-200 text-center py-6 text-sm [#0f0f0f] font-semibold dark:text-gray-300 font-montserrat">
+                <footer className="w-full bg-[#0f0f0f] text-center py-6 text-sm text-white font-semibold dark:text-white font-montserrat">
                   © {new Date().getFullYear()} Gaurang Rameshbhai Dhanani. All rights reserved.
                 </footer>
               </>

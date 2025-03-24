@@ -5,6 +5,8 @@ module.exports = {
       extend: {
         fontFamily: {
           neuemontreal: ['Neuemontreal', 'sans-serif'],
+          robomono: ['Roboto Mono', 'monospace'],
+          oswald: ['Oswald', 'sans-serif']
         },
       },
     },

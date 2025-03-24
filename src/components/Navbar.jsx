@@ -2,30 +2,30 @@ import React from 'react';
 
 const Navbar = () => {
   return (
-    <nav className="w-full sticky top-0 z-50 bg-blue-200/50 backdrop-blur shadow-sm" aria-label="Main navigation">
+    <nav className="w-full sticky top-0 z-50 backdrop-blur shadow-sm"   style={{ backgroundColor: '#0f0f0f' }}    aria-label="Main navigation">
       <div className="w-full mx-auto px-6 py-4 flex items-center justify-between">
         {/* Brand */}
-        <a href="/" className="text-2xl font-bold text-[#0f0f0f] font-neuemontreal">
+        <a href="/" className="text-2xl font-bold text-white font-oswald">
           Gaurang
         </a>
 
         {/* Nav Links for medium+ */}
-        <ul className="hidden md:flex space-x-8 text-[#0f0f0f] font-neuemontreal text-lg">
+        <ul className="hidden md:flex space-x-8 text-white font-oswald text-lg">
           <li>
-            <a href="#about" className="hover:text-[#0f0f0f] transition">About me</a>
+            <a href="#about" className="hover:text-white transition">About me</a>
           </li>
           <li>
-            <a href="#contact" className="hover:text-[#0f0f0f] transition">Contact</a>
+            <a href="#contact" className="hover:text-white transition">Contact</a>
           </li>
         </ul>
 
         {/* Nav Links for small screens */}
-        <ul className="flex-col items-end space-y-2 text-[#0f0f0f] font-neuemontreal text-[5vw] md:hidden">
+        <ul className="flex-col items-end space-y-2 text-white font-oswald text-[5vw] md:hidden">
           <li>
-            <a href="#about" className="hover:text-[#0f0f0f] transition">About me</a>
+            <a href="#about" className="hover:text-white transition">About me</a>
           </li>
           <li>
-            <a href="#contact" className="hover:text-[#0f0f0f] transition">Contact</a>
+            <a href="#contact" className="hover:text-white transition">Contact</a>
           </li>
         </ul>
       </div>
