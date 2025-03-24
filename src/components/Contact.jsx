@@ -3,7 +3,7 @@ import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
 
 const Contact = () => {
   return (
-    <section id="contact" className="w-full py-[2vw] px-[1vw] text-[#0f0f0f]">
+    <section id="contact" className="w-full py-[2vw] bg-blue-200 px-[1vw] text-[#0f0f0f]">
       <div className="max-w-3xl mx-auto text-center">
         <h2 className="text-[6vw] max-md:text-[12vw] font-neuemontreal font-semibold mb-6 text-[#0f0f0f]">
           Contact

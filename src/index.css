@@ -19,11 +19,19 @@
   font-display: swap;
 }
 
-body {
-  @apply bg-blue-200;
+html, body {
+  background-color: #bfdbfe; /* Tailwind's bg-blue-200 */
+  color: #0f0f0f;
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #bfdbfe !important;
+    color: #0f0f0f !important;
+  }
 }
 
