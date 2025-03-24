@@ -9,17 +9,23 @@ const Navbar = () => {
           Gaurang
         </a>
 
-        {/* Nav Links */}
+        {/* Nav Links for medium+ */}
         <ul className="hidden md:flex space-x-8 text-[#0f0f0f] font-neuemontreal text-lg">
           <li>
-            <a href="#about" className="hover:text-[#0f0f0f] transition">
-              About me
-            </a>
+            <a href="#about" className="hover:text-[#0f0f0f] transition">About me</a>
           </li>
           <li>
-            <a href="#contact" className="hover:text-[#0f0f0f] transition">
-              Contact
-            </a>
+            <a href="#contact" className="hover:text-[#0f0f0f] transition">Contact</a>
+          </li>
+        </ul>
+
+        {/* Nav Links for small screens */}
+        <ul className="flex-col items-end space-y-2 text-[#0f0f0f] font-neuemontreal text-[5vw] md:hidden">
+          <li>
+            <a href="#about" className="hover:text-[#0f0f0f] transition">About me</a>
+          </li>
+          <li>
+            <a href="#contact" className="hover:text-[#0f0f0f] transition">Contact</a>
           </li>
         </ul>
       </div>
