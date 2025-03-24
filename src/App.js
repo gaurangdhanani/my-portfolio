@@ -1,15 +1,36 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import Contact from './components/Contact';
+import Divider from './components/Divider';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
-    <div>
-      <Navbar />
-      <HeroSection />
-      <Contact />
-    </div>
+    <Router>
+      <div className="bg-blue-200 dark:bg-gray-900 dark:text-white transition-all">
+        <Navbar />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Divider />
+                <HeroSection />
+                <Divider />
+                <Contact />
+                <footer className="w-full bg-blue-200 text-center py-6 text-sm text-gray-600 dark:text-gray-300 font-montserrat">
+                  © {new Date().getFullYear()} Gaurang Rameshbhai Dhanani. All rights reserved.
+                </footer>
+              </>
+            }
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
