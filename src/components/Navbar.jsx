@@ -15,7 +15,7 @@ const Navbar = () => {
       <div className="w-full mx-auto px-6 py-4 flex items-center justify-between">
         {/* Brand */}
         <a href="/" className="text-2xl font-bold text-white font-oswald">
-          Gaurang
+          Gaurang Dhanani
         </a>
 
         {/* Hamburger Icon (mobile only) */}

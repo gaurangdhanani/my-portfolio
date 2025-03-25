@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import ImageSlider from "./ImageSlider";
+import MyImage from "./MyImage";
 // import more images as needed
 
 const HeroSection = () => {
@@ -43,10 +43,10 @@ const HeroSection = () => {
                 transition={{ duration: 1.5, ease: 'easeOut' }}
                 viewport={{ once: true }}
             >
-                I'm a Computer Science student at the University of Texas at Dallas, exploring everything from front-end development to backend systems. 
-                I enjoy building smooth user experiences, solving logic problems, and learning new things along the way. I'm comfortable working with 
-                C++, Java, React.js, SQL, and always curious to pick up new tools. When I'm not coding, you’ll probably find me watching animes, 
-                catching the latest F1 race, or gaming.
+               I'm a sophomore Computer Science student at the University of Texas at Dallas, exploring everything from front-end development to backend systems. 
+               I enjoy building smooth user experiences, solving logic problems, and learning new things along the way. I’ve worked with technologies like HTML, 
+               CSS, JavaScript, TypeScript, React.js, Node.js, Java, C++, and SQL, and I’m always curious to pick up new frameworks and technologies. When I’m not coding, 
+               you’ll probably find me watching anime, catching the latest F1 race, or gaming.
             </motion.h2>
 
             <motion.a
@@ -65,7 +65,7 @@ const HeroSection = () => {
 
         {/* Right Side - Clickable Nature Gallery */}
         <div className="flex-1 flex justify-center w-full">
-        <ImageSlider />
+        <MyImage />
         </div>
       </div>
     </section>
