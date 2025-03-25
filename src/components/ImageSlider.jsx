@@ -18,7 +18,7 @@ const ImageSlider = () => {
   const prev = () => setIndex((index - 1 + images.length) % images.length);
 
   return (
-    <div className="relative w-full max-w-[1300px] max-md:max-w-full aspect-video overflow-hidden bg-blue-200 border-[4px] border-black">
+    <div className="relative w-full max-w-[1300px] max-md:max-w-full aspect-video overflow-hidden bg-white border-[4px] border-black">
       <AnimatePresence mode="wait">
   <motion.img
     key={index}
