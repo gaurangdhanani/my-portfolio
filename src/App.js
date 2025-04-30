@@ -7,17 +7,18 @@ import HeroSection from './components/HeroSection';
 import Contact from './components/Contact';
 import Divider from './components/Divider';
 import NotFound from './pages/NotFound';
+import MenuPage from './pages/MenuPage';
 
 function App() {
   return (
     <Router>
       <div className="bg-blue-200 dark:bg-gray-900 dark:text-white transition-all">
-        <Navbar />
         <Routes>
           <Route
             path="/"
             element={
               <>
+                <Navbar />
                 <Divider />
                 <HeroSection />
                 <Divider />
@@ -28,6 +29,7 @@ function App() {
               </>
             }
           />
+          <Route path="/menu" element={<MenuPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Analytics />
