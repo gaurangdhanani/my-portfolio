@@ -23,9 +23,10 @@ const MenuPage = () => {
   };
 
   return (
-    <div className="flex h-screen bg-black text-white font-oswald overflow-hidden">
+    <div className="flex flex-col sm:flex-row h-screen bg-black text-white font-oswald overflow-hidden relative">
       
-      <div className="relative z-[1] text-center w-auto px-[2vw] flex flex-col justify-center gap-10">
+      <div className="relative z-10 w-full md:w-auto flex flex-col items-center gap-10 text-center
+                pt-[20vh] md:pt-0 md:justify-center md:h-full px-[4vw]">
       {menuItems.map(({ id, label }) => (
           <motion.div
             key={id}
@@ -47,7 +48,7 @@ const MenuPage = () => {
                 : {}
             }
             transition={{ duration: 0.8, ease: 'easeInOut' }}
-            className="text-[3vw] max-md:text-[7vw] cursor-pointer transition-all whitespace-nowrap"
+            className="text-[8vw] md:text-[3vw] cursor-pointer transition-all whitespace-nowrap"
             >
             {label}
           </motion.div>
@@ -64,7 +65,7 @@ const MenuPage = () => {
             top: '33%',
             left: '50.5%',
             transform: 'translate(-50%, -50%)',
-            width: '120vw',
+            width: '140vw',
             height: '100vh',
             maxWidth: 'none',
             maxHeight: 'none',
