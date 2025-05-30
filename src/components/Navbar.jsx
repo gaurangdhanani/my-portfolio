@@ -1,58 +1,103 @@
-import React, { useState } from 'react';
-import { FaBars, FaTimes } from 'react-icons/fa';
+"use client"
+
+import { useState } from "react"
+import { motion } from "framer-motion"
+import { FaBars, FaTimes } from "react-icons/fa"
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  const toggleMenu = () => setIsOpen(!isOpen);
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
   return (
-    <nav
-      className="w-full sticky top-0 z-50 backdrop-blur shadow-sm"
-      style={{ backgroundColor: '#0f0f0f' }}
-      aria-label="Main navigation"
-    >
-      <div className="w-full mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Brand */}
-        <a href="/" className="text-2xl font-bold text-white font-oswald">
-          Gaurang Dhanani
-        </a>
-
-        {/* Hamburger Icon (mobile only) */}
-        <button
-          onClick={toggleMenu}
-          className="text-white text-2xl md:hidden"
-          aria-label="Toggle menu"
+    <nav className="fixed top-0 w-full z-50 backdrop-blur-sm bg-black/20 border-b border-white/10">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <motion.a
+          href="#hero"
+          className="text-2xl font-bold text-white tracking-wider font-neuemontreal"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
         >
-          {isOpen ? <FaTimes /> : <FaBars />}
+          GAURANG
+        </motion.a>
+
+        <button onClick={toggleMenu} className="text-white text-2xl md:hidden hover:text-red-500 transition-colors">
+          {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
 
-        {/* Nav Links for medium+ */}
-        <ul className="hidden md:flex space-x-8 text-white font-oswald text-lg">
+        <motion.ul
+          className="hidden md:flex space-x-8 text-white text-sm tracking-widest uppercase font-medium font-neuemontreal"
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
           <li>
-            <a href="#about" className="hover:text-white transition">About me</a>
+            <a href="#hero" className="hover:text-red-500 transition-colors duration-300">
+              Home
+            </a>
           </li>
           <li>
-            <a href="#contact" className="hover:text-white transition">Contact</a>
+            <a href="#about" className="hover:text-red-500 transition-colors duration-300">
+              About
+            </a>
           </li>
-        </ul>
+          <li>
+            <a href="#projects" className="hover:text-red-500 transition-colors duration-300">
+              Projects
+            </a>
+          </li>
+          <li>
+            <a href="#contact" className="hover:text-red-500 transition-colors duration-300">
+              Contact
+            </a>
+          </li>
+        </motion.ul>
       </div>
 
       {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden px-6 pb-4">
-          <ul className="flex flex-col space-y-2 text-white font-oswald text-[5vw]">
-            <li>
-              <a href="#about" className="hover:text-white transition" onClick={toggleMenu}>About me</a>
-            </li>
-            <li>
-              <a href="#contact" className="hover:text-white transition" onClick={toggleMenu}>Contact</a>
-            </li>
+      {isMenuOpen && (
+        <motion.div
+          className="md:hidden absolute top-full left-0 w-full bg-black/95 backdrop-blur-md"
+          initial={{ opacity: 0, x: -100 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -100 }}
+          transition={{ duration: 0.3 }}
+        >
+          <ul className="flex flex-col space-y-4 p-6 text-white text-sm tracking-widest uppercase font-medium font-neuemontreal">
+            <motion.li initial={{ x: -50 }} animate={{ x: 0 }} transition={{ delay: 0.1 }}>
+              <a href="#hero" onClick={toggleMenu} className="hover:text-red-500 transition-colors">
+                Home
+              </a>
+            </motion.li>
+            <motion.li initial={{ x: -50 }} animate={{ x: 0 }} transition={{ delay: 0.2 }}>
+              <a href="#about" onClick={toggleMenu} className="hover:text-red-500 transition-colors">
+                About
+              </a>
+            </motion.li>
+            <motion.li initial={{ x: -50 }} animate={{ x: 0 }} transition={{ delay: 0.3 }}>
+              <a
+                href="#projects"
+                onClick={(e) => {
+                  e.preventDefault()
+                  document.querySelector("#projects")?.scrollIntoView({ behavior: "smooth" })
+                  setTimeout(() => toggleMenu(), 300)
+                }}
+                className="hover:text-red-500 transition-colors"
+              >
+                Projects
+              </a>
+            </motion.li>
+            <motion.li initial={{ x: -50 }} animate={{ x: 0 }} transition={{ delay: 0.4 }}>
+              <a href="#contact" onClick={toggleMenu} className="hover:text-red-500 transition-colors">
+                Contact
+              </a>
+            </motion.li>
           </ul>
-        </div>
+        </motion.div>
       )}
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

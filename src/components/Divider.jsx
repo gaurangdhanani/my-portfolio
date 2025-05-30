@@ -1,17 +1,16 @@
-// components/Divider.jsx
-import React from "react";
-import { motion } from "framer-motion";
+"use client"
+import { motion } from "framer-motion"
 
 const Divider = () => {
   return (
     <motion.div
-      className="w-full h-[2px] bg-blue-600 my-[vw]"
-      initial={{ width: 0 }}
-      whileInView={{ width: "100%" }}
+      className="w-full h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent my-8"
+      initial={{ scaleX: 0 }}
+      whileInView={{ scaleX: 1 }}
       transition={{ duration: 1.5, ease: "easeOut" }}
       viewport={{ once: true }}
     />
-  );
-};
+  )
+}
 
-export default Divider;
+export default Divider
