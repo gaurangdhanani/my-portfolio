@@ -43,9 +43,18 @@ const Navbar = () => {
             </a>
           </li>
           <li>
-            <a href="#projects" className="hover:text-red-500 transition-colors duration-300">
+            <a
+              href="#projects"
+              onClick={(e) => {
+                e.preventDefault()
+                sessionStorage.setItem("navJump", "true")
+                document.querySelector("#projects")?.scrollIntoView({ behavior: "smooth" })
+              }}
+              className="hover:text-red-500 transition-colors"
+            >
               Projects
             </a>
+
           </li>
           <li>
             <a href="#contact" className="hover:text-red-500 transition-colors duration-300">

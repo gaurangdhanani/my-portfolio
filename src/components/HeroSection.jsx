@@ -1,12 +1,11 @@
 "use client"
 
 import { useRef, useState, useEffect } from "react"
-import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion"
+import { useMotionValue, motion, useScroll, useTransform, useSpring} from "framer-motion"
 import { FaPlay, FaGithub, FaLinkedin, FaInstagram } from "react-icons/fa"
 import MyImage from "./MyImage"
 
 const HeroSection = () => {
-  const [activeProject, setActiveProject] = useState(null)
   const [particles, setParticles] = useState([])
   const containerRef = useRef(null)
   const aboutRef = useRef(null)
@@ -23,14 +22,24 @@ const HeroSection = () => {
     offset: ["start end", "end start"],
   })
 
-  const { scrollYProgress: projectsScrollProgress } = useScroll({
-    target: projectsRef,
-    offset: ["start end", "end start"],
-  })
-
   const { scrollYProgress: contactScrollProgress } = useScroll({
     target: contactRef,
     offset: ["start end", "end start"],
+  })
+
+  const { scrollYProgress: projectsScrollProgress } = useScroll({
+    target: projectsRef,
+    offset: ["start center", "center center"],
+  })
+
+  const { scrollYProgress: fadeInScroll } = useScroll({
+  target: projectsRef,
+  offset: ["start end", "center center"],
+})
+
+  const { scrollYProgress: fadeOutScroll } = useScroll({
+    target: projectsRef,
+    offset: ["center center", "end start"],
   })
 
   const smoothProgress = useSpring(scrollYProgress, {
@@ -38,6 +47,12 @@ const HeroSection = () => {
     damping: 30,
     restDelta: 0.001,
   })
+
+  const smoothProjectsScroll = useSpring(projectsScrollProgress, {
+  stiffness: 80,
+  damping: 20,
+  restDelta: 0.001,
+})  
 
   // Multiple parallax directions
   const backgroundY = useTransform(smoothProgress, [0, 1], ["0%", "30%"])
@@ -59,13 +74,36 @@ const HeroSection = () => {
   const aboutImageScale = useTransform(aboutScrollProgress, [0, 0.5], [0.8, 1])
   const aboutImageRotate = useTransform(aboutScrollProgress, [0, 0.5], [10, 0])
 
-  // Projects section animations - Right to Left Parallax
-  const projectsBackgroundY = useTransform(projectsScrollProgress, [0, 1], ["0%", "50%"])
-  const projectsBackgroundX = useTransform(projectsScrollProgress, [0, 1], ["100%", "-100%"]) // Right to Left
-  const projectsHeaderY = useTransform(projectsScrollProgress, [0, 0.5], ["100%", "0%"])
-  const projectsHeaderX = useTransform(projectsScrollProgress, [0, 0.5], ["-50%", "0%"]) // Right to Left for header
-  const projectsOpacity = useTransform(projectsScrollProgress, [0, 0.5], [0, 1])
-  const projectsContentX = useTransform(projectsScrollProgress, [0, 1], ["-25%", "25%"]) // Reduced movement for mobile
+  // Projects parallax
+  const projectsX = useTransform(smoothProjectsScroll, [0, 0.5], ["50%", "0%"])
+  const fadeIn = useTransform(fadeInScroll, [0, 1], [0, 1])
+  const fadeInSmooth = useSpring(fadeIn, {
+    stiffness: 60,
+    damping: 20,
+  })
+  const fadeOut = useTransform(fadeOutScroll, [0, 1], [1, 0])
+  const fadeOutSmooth = useSpring(fadeOut, {
+    stiffness: 60,
+    damping: 20,
+  })
+  const slideRight = useTransform(fadeOutScroll, [0, 1], ["0%", "20%"])
+  const slideRightSmooth = useSpring(slideRight, {
+    stiffness: 25,
+    damping: 35,
+  })
+
+  const finalOpacity = useMotionValue(0)
+
+  // Update final opacity based on whichever is active
+  useEffect(() => {
+    const unsubFadeIn = fadeInSmooth.on("change", (v) => finalOpacity.set(v))
+    const unsubFadeOut = fadeOutSmooth.on("change", (v) => finalOpacity.set(v))
+    return () => {
+      unsubFadeIn()
+      unsubFadeOut()
+    }
+  }, [fadeInSmooth, fadeOutSmooth, finalOpacity])
+
 
   // Contact section parallax - Fixed
   const contactBackgroundY = useTransform(contactScrollProgress, [0, 1], ["0%", "30%"])
@@ -79,21 +117,23 @@ const HeroSection = () => {
       description:
         "A modern portfolio website with parallax effects and smooth animations built with React and Framer Motion.",
       tags: ["React", "Framer Motion", "Tailwind CSS"],
-      color: "bg-gradient-to-br from-red-600 to-red-800",
     },
     {
       title: "NrveNest Wellness App",
       description:
         "NrveNest is a wellness platform built with React Native, Expo, Firebase, and FastAPI to help users find calmness with meditation, gratitude journaling, and AI-powered emotional insights.",
       tags: ["React Native", "Expo", "Firebase", "FastAPI", "OpenAI"],
-      color: "bg-gradient-to-br from-blue-600 to-blue-800",
-      image: "/projects/nrvenest.png"
     },
     {
       title: "Disk-Based B-Tree Index System",
       description: "Implements a B-Tree stored on disk in fixed 512-byte blocks with big-endian serialization. Supports insert/search/print/load/extract via a CLI (Main.java), uses degree=10 (max 19 keys/node), enforces ≤3 nodes in memory, CSV I/O, and duplicate-key detection.",
       tags: ["Java", "B-Tree", "Disk I/O", "Algorithms", "CSV"],
-      color: "bg-gradient-to-br from-purple-600 to-purple-800",
+    },
+    {
+      title: "Phosphorus Library Management System",
+      description:
+        "Phosphorus is a full-stack desktop and web application designed to streamline library operations such as borrower management, book tracking, and fine enforcement. Built with React, Vite, Electron, a custom Python backend, and MySQL, it offers efficient check-ins, checkouts, and real-time fine tracking with session-based access control.",
+      tags: ["React", "Vite", "Electron", "Python", "MySQL", "Tailwind CSS"],
     },
   ]
 
@@ -178,7 +218,7 @@ const HeroSection = () => {
       />
 
       {/* Dense Animated Star Field */}
-      <div className="fixed inset-0 z-1">
+      <div className="fixed inset-0 z-1" style={{ y: backgroundY }}>
         {particles.map((particle, i) => (
           <motion.div
             key={i}
@@ -477,94 +517,25 @@ const HeroSection = () => {
         </section>
 
         {/* Projects Section with Right-to-Left Parallax */}
-        <section id="projects" ref={projectsRef} className="relative min-h-screen py-20 overflow-hidden">
-          {/* Right-to-Left Parallax Background */}
+        <motion.section id="projects" ref={projectsRef} className="relative min-h-screen flex items-center py-20 overflow-hidden"   style={{
+            opacity: finalOpacity,
+            x: slideRightSmooth,
+          }}>
+          {/* Animated background layers already handled globally, so no duplicates here */}
           <motion.div
-            className="absolute inset-0 z-0"
-            style={{
-              y: projectsBackgroundY,
-              x: projectsBackgroundX, // Right to Left movement
-              background: "transparent",
-            }}
+            style={{ x: projectsX }}
+            className="max-w-7xl mx-auto px-4 md:px-6 relative z-10"
           >
-            <div
-              className="absolute top-0 left-0 w-full h-full"
-              style={{
-                background: "linear-gradient(180deg, #000000 0%, #1a1a1a 50%, #000000 100%)",
-                backgroundImage: "none",
-              }}
-            />
-
-            {/* Animated grid pattern moving right to left */}
-            <div className="absolute inset-0 opacity-5">
-              <div className="grid grid-cols-12 h-full">
-                {[...Array(12)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="border-l border-white/20 h-full"
-                    animate={{ x: ["100%", "-100%"] }}
-                    transition={{ duration: 20 + i, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-                  />
-                ))}
-              </div>
-              <div className="grid grid-rows-12 w-full">
-                {[...Array(12)].map((_, i) => (
-                  <motion.div
-                    key={i + 100}
-                    className="border-t border-white/20 w-full"
-                    animate={{ x: ["50%", "-50%"] }}
-                    transition={{ duration: 15 + i, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Animated light beams moving right to left */}
-            <motion.div
-              className="absolute top-0 left-1/4 w-1 h-full bg-gradient-to-b from-transparent via-red-500/20 to-transparent"
-              animate={{
-                opacity: [0.1, 0.5, 0.1],
-                scaleX: [1, 3, 1],
-                x: ["100%", "-100%"],
-              }}
-              transition={{
-                opacity: { duration: 5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" },
-                scaleX: { duration: 5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" },
-                x: { duration: 12, repeat: Number.POSITIVE_INFINITY, ease: "linear" },
-              }}
-            />
-            <motion.div
-              className="absolute top-0 right-1/3 w-1 h-full bg-gradient-to-b from-transparent via-blue-500/20 to-transparent"
-              animate={{
-                opacity: [0.1, 0.3, 0.1],
-                scaleX: [1, 2, 1],
-                x: ["50%", "-150%"],
-              }}
-              transition={{
-                opacity: { duration: 7, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 1 },
-                scaleX: { duration: 7, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 1 },
-                x: { duration: 15, repeat: Number.POSITIVE_INFINITY, ease: "linear", delay: 2 },
-              }}
-            />
-          </motion.div>
-
           <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-            {/* Header with Right-to-Left Animation */}
+            {/* Section Header */}
             <motion.div
-              className="text-center mb-8 md:mb-12 lg:mb-16"
-              style={{
-                y: projectsHeaderY,
-                x: projectsHeaderX, // Right to Left for header
-                opacity: projectsOpacity,
-              }}
+              className="text-center mb-12"
+              initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1.2 }}
+              viewport={{ once: true }}
             >
-              <motion.h2
-                className="text-3xl md:text-5xl lg:text-7xl font-black text-white tracking-tighter font-neuemontreal inline-block relative"
-                initial={{ opacity: 0, x: 100 }} // Changed from x: -100 to x: 100 for right to left
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
-              >
+              <h2 className="text-3xl md:text-5xl lg:text-7xl font-black text-white tracking-tighter font-neuemontreal inline-block relative">
                 PROJECTS<span className="text-red-500">.</span>
                 <motion.div
                   className="absolute -bottom-2 md:-bottom-4 left-0 h-0.5 md:h-1 bg-red-500"
@@ -573,153 +544,38 @@ const HeroSection = () => {
                   transition={{ duration: 1.2, delay: 0.5 }}
                   viewport={{ once: true }}
                 />
-              </motion.h2>
+              </h2>
             </motion.div>
 
-            {/* Projects Grid with Staggered Right-to-Left Animation */}
-            <motion.div style={{ x: projectsContentX }}>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
-                {projects.map((project, index) => (
-                  <motion.div
-                    key={index}
-                    className="group relative overflow-hidden bg-black border border-white/10 hover:border-red-500/50 transition-all duration-500 cursor-pointer"
-                    initial={{ opacity: 0, x: -100 }} // Start from right
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, delay: index * 0.2 }}
-                    viewport={{ once: true }}
-                    whileHover={{ y: -10 }}
-                    onHoverStart={() => setActiveProject(index)}
-                    onHoverEnd={() => setActiveProject(null)}
-                  >
-                    {/* Project Color Background */}
-                    <div className="relative overflow-hidden h-48 md:h-56 lg:h-64">
-                      <motion.div
-                        className={`w-full h-full ${project.color} relative flex items-center justify-center`}
-                        whileHover={{ scale: 1.02 }}
+            {/* Projects Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-4">
+              {projects.map((project, index) => (
+                <motion.div
+                  key={index}
+                  className="bg-gradient-to-br from-[#1a1a1a] via-[#111111] to-[#000000] border border-white/10 hover:border-red-500/50 transition-all duration-500 p-6 flex flex-col justify-between cursor-pointer"
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1.2, delay: index * 0.3 }}
+                  viewport={{ once: true }}
+                >
+                  <h3 className="text-white text-xl font-bold mb-4 text-center"> {project.title} </h3>
+                  <p className="text-gray-400 text-sm mb-4">{project.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.map((tag, tagIndex) => (
+                      <span
+                        key={tagIndex}
+                        className="bg-white/5 border border-white/10 px-3 py-1 text-xs tracking-widest uppercase text-white/70"
                       >
-                        {/* Project Title Overlay */}
-                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                          <h3 className="text-white text-lg md:text-xl lg:text-2xl font-bold tracking-wider font-neuemontreal opacity-60">
-                            {project.title.split(" ")[0]}
-                          </h3>
-                        </div>
-
-                        {/* Animated scan line moving right to left */}
-                        <motion.div
-                          className="absolute left-0 w-full h-20 bg-gradient-to-b from-transparent via-white/20 to-transparent"
-                          initial={{ left: "100%" }}
-                          animate={activeProject === index ? { left: ["-20%", "100%"] } : { left: "100%" }}
-                          transition={{
-                            duration: 2,
-                            repeat: activeProject === index ? Number.POSITIVE_INFINITY : 0,
-                            ease: "linear",
-                          }}
-                        />
-
-                        {/* 
-                          <motion.div
-                            className="absolute inset-0 bg-black/60 transition-all duration-500 z-10 flex items-center justify-center opacity-0 group-hover:opacity-100"
-                            initial={{ opacity: 0 }}
-                            whileHover={{ opacity: 1 }}
-                          >
-                            <motion.button
-                              className="bg-white text-black px-6 py-3 text-sm uppercase tracking-widest font-medium flex items-center gap-2 font-neuemontreal transform translate-y-10 group-hover:translate-y-0 transition-all duration-500"
-                              whileHover={{ scale: 1.05 }}
-                              initial={{ y: 40, opacity: 0 }}
-                              whileInView={{ y: 0, opacity: 1 }}
-                              transition={{ delay: 0.2 }}
-                            >
-                              View Project <FaExternalLinkAlt size={12} />
-                            </motion.button>
-                          </motion.div>
-                        */}
-
-
-                        {/* Corner accents that appear on hover */}
-                        <AnimatePresence>
-                          {activeProject === index && (
-                            <>
-                              <motion.div
-                                className="absolute top-2 left-2 w-8 h-8 border-t-2 border-l-2 border-white"
-                                initial={{ opacity: 0, scale: 0 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0 }}
-                                transition={{ duration: 0.3 }}
-                              />
-                              <motion.div
-                                className="absolute top-2 right-2 w-8 h-8 border-t-2 border-r-2 border-white"
-                                initial={{ opacity: 0, scale: 0 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0 }}
-                                transition={{ duration: 0.3, delay: 0.1 }}
-                              />
-                              <motion.div
-                                className="absolute bottom-2 left-2 w-8 h-8 border-b-2 border-l-2 border-white"
-                                initial={{ opacity: 0, scale: 0 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0 }}
-                                transition={{ duration: 0.3, delay: 0.2 }}
-                              />
-                              <motion.div
-                                className="absolute bottom-2 right-2 w-8 h-8 border-b-2 border-r-2 border-white"
-                                initial={{ opacity: 0, scale: 0 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0 }}
-                                transition={{ duration: 0.3, delay: 0.3 }}
-                              />
-                            </>
-                          )}
-                        </AnimatePresence>
-                      </motion.div>
-                    </div>
-
-                    {/* Project Info with Animations */}
-                    <div className="p-4 md:p-6 bg-black">
-                      <motion.h3
-                        className="text-white text-lg md:text-xl font-bold mb-2 tracking-wide font-neuemontreal group-hover:text-red-500 transition-colors"
-                        animate={activeProject === index ? { x: [0, 5, 0] } : { x: 0 }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        {project.title}
-                      </motion.h3>
-                      <motion.p
-                        className="text-gray-400 text-xs md:text-sm leading-relaxed mb-3 md:mb-4 font-neuemontreal"
-                        initial={{ opacity: 0.7 }}
-                        whileHover={{ opacity: 1 }}
-                      >
-                        {project.description}
-                      </motion.p>
-                      <div className="flex flex-wrap gap-1.5 md:gap-2">
-                        {project.tags.map((tag, tagIndex) => (
-                          <motion.span
-                            key={tagIndex}
-                            className="bg-white/5 border border-white/10 px-2 md:px-3 py-1 text-xs tracking-widest uppercase font-medium font-neuemontreal text-white/70 relative overflow-hidden"
-                            whileHover={{
-                              y: -3,
-                              backgroundColor: "rgba(239, 68, 68, 0.1)",
-                              borderColor: "rgba(239, 68, 68, 0.3)",
-                              color: "rgba(255, 255, 255, 0.9)",
-                            }}
-                            animate={activeProject === index ? { y: [-2, 0] } : { y: 0 }}
-                            transition={{ duration: 0.3, delay: tagIndex * 0.1 }}
-                          >
-                            <motion.div
-                              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                              initial={{ x: "-100%" }}
-                              animate={activeProject === index ? { x: "100%" } : { x: "-100%" }}
-                              transition={{ duration: 1, delay: tagIndex * 0.2 }}
-                            />
-                            {tag}
-                          </motion.span>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </section>
+          </motion.div>
+        </motion.section>
 
         {/* Contact Section with Fixed Parallax */}
         <motion.section
